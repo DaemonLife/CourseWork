@@ -10,7 +10,7 @@ class Group(models.Model):
 class discipline(models.Model):
     name = models.CharField(max_length=127)
 
-class teacher(model.Model):
+class teacher(models.Model):
     surname = models.CharField(max_length=31)
     name = models.CharField(max_length=31)
     patronymic = models.CharField(max_length=31)
