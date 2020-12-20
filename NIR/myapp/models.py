@@ -8,13 +8,13 @@ class Teacher(models.Model):
     name = models.CharField(max_length=31)
     patronymic = models.CharField(max_length=31)
     position = models.CharField(max_length=31)
-    chair = models.ForeignKey('Chair', on_delete=models.SET_NULL)
-    work_time = models.OneToOneField('Work_time', on_delete = models.SET_NULL)
+    chair = models.ForeignKey('Chair', null=True, on_delete=models.SET_NULL)
+    work_time = models.OneToOneField('Work_time', null=True, on_delete = models.SET_NULL)
 
 # Кафедра
 class Chair(models.Model):
     name = models.CharField(max_length=31)
-    faculty = models.ForeignKey('Faculty', on_delete = models.SET_NULL)
+    faculty = models.ForeignKey('Faculty', null=True, on_delete = models.SET_NULL)
 
 # Рабочее время преподавателя
 class Work_time(models.Model):
@@ -34,47 +34,41 @@ class Faculty(models.Model):
 class  Direction (models.Model):
     code = models.CharField(max_length=15, primary_key=True) # id
     name = models.CharField(max_length=31)
-    chair = models.ForeignKey('Chair', on_delete=models.SET_NULL)
+    chair = models.ForeignKey('Chair', null=True, on_delete=models.SET_NULL)
     qualification = models.CharField(max_length=63)
 
 # Группа
 class Group(models.Model): 
     name = models.CharField(max_length=31)
     amount = models.PositiveIntegerField()
-    direction = models.ForeignKey('Direction', on_delete=models.SET_NULL)
+    direction = models.ForeignKey('Direction', null=True, on_delete=models.SET_NULL)
 
 # Подгруппа
 class Subgroup(models.Model):
     amount = models.PositiveIntegerField()
-    group_parent = models.OneToOneField('Group', on_delete=models.SET_NULL)
+    group_parent = models.OneToOneField('Group', null=True, on_delete=models.SET_NULL)
 
-# Дисциплина
-class Discipline(models.Model):
-    name = models.CharField(max_length=127)
+# Расписание экзамена
+class Exam_schedule(models.Model):
+    name = models.CharField(max_length=63)
+    date = models.DateField()
+    groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL)
 
 # Расписание занятия
 class Class_schedule(models.Model):
-    pass
+    groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL)
+    teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL)
+    room = models.OneToOneField('Room', null=True, on_delete=models.SET_NULL)
+    discipline_name = models.CharField(max_length=63)
+    week_day = models.DateField()
+    periodicity = models.CharField(max_length=3)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
-# Экзамен
-class Exam(models.Model):
-    day = models.DateField()
-    groups = models.ForeignKey(Group, on_delete=models.SET_NULL)
-
-class Discipline_schedule(models.Model):
-    pass
-
-# ! Литобзор
-
-# 1 раздел
-# основной вопрос что делали до вас
-# какие существуют системы из-за чего возникла задача
-
-# 2 свой инструментарий
-# Питон, Джанго, БД
-# Какие возможности
-
-# * Теор часть
-
-# ! Практическая часть
-# сделать кое-какие сырые модели 
+# Аудитория
+class Room(models.Model):
+    number = models.PositiveIntegerField()
+    type_room = models.CharField(max_length=31)
+    capacity = models.PositiveIntegerField()
+    corps_index = models.CharField(max_length=7)
+    corps_number = models.PositiveIntegerField()
