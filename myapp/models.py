@@ -90,15 +90,16 @@ class Group(models.Model):
 
 # Подгруппа
 class Subgroup(models.Model):
+    number = models.PositiveIntegerField(max_length=1, verbose_name='Номер подгруппы')
     amount = models.PositiveIntegerField(max_length=3, verbose_name='Количество')
     group_parent = models.OneToOneField('Group', null=True, on_delete=models.SET_NULL, verbose_name='Родительская группа')
 
     class Meta:
         verbose_name_plural = 'Подгруппы'
         verbose_name = 'Подгруппа'
-        # ordering = ['name']
-    # def __str__(self):
-        # return self.
+        ordering = ['number']
+    def __str__(self):
+        return f'Подгруппа {self.group_parent.name} N{self.number}'
 
 # Расписание экзамена
 class Exam_schedule(models.Model):
@@ -107,11 +108,11 @@ class Exam_schedule(models.Model):
     groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL)
 
     class Meta:
-        verbose_name_plural = 'Подгруппы'
-        verbose_name = 'Подгруппа'
+        verbose_name_plural = 'Расписание экзаменов'
+        verbose_name = 'Расписание экзамена'
         ordering = ['name']
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.groups.name}'
 
 # Расписание занятия
 class Class_schedule(models.Model):
