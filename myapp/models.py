@@ -7,7 +7,7 @@ class Teacher(models.Model):
     patronymic = models.CharField(max_length=31, verbose_name='Отчество')
     position = models.CharField(max_length=31, verbose_name='Должность')
     chair = models.ForeignKey('Chair', null=True, on_delete=models.SET_NULL, verbose_name='Кафедра')
-    work_time = models.ForeignKey('Work_time', null=True, on_delete = models.SET_NULL, verbose_name='Рабочее время')
+    # work_time = models.ForeignKey('Work_time', null=True, on_delete = models.SET_NULL, verbose_name='Рабочее время')
 
     class Meta:
         verbose_name_plural = 'Преподаватели'
@@ -30,22 +30,45 @@ class Chair(models.Model):
     def __str__(self):
         return self.name
 
-# Рабочее время преподавателя
+# # Преподватель + Рабочее время
+# class Work_time_Teacher(models.Model): # ! доработать
+#     teacher = models.ForeignKey('Teacher', on_delete=models.SET_NULL)
+#     work_time = models.ForeignKey('Work_time', on_delete=models.SET_NULL)
+
+#     class Meta:
+#         verbose_name_plural = 'Рабочее время преподавателя'
+#         verbose_name_plural = 'Рабочее время преподавателей'
+
+#     def __str__(self):
+#         return f'Рабочее время преподавателя {self.teacher.surname}'
+
+# Рабочее время
 class Work_time(models.Model): # ! доработать
-    # monday = 
-    # tuesday = 
-    # wednesday =
-    # thursday = 
-    # friday = 
+    teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL)
+
+    monday_start = models.TimeField(verbose_name='Понедельник - начало', null=True, blank=True)
+    monday_end = models.TimeField(verbose_name='Понедельник - конец', null=True, blank=True)
+    tuesday_start = models.TimeField(verbose_name='Вторник - начало', null=True, blank=True)
+    tuesday_end = models.TimeField(verbose_name='Вторник - конец', null=True, blank=True)
+    wednesday_start = models.TimeField(verbose_name='Среда - начало', null=True, blank=True)
+    wednesday_end = models.TimeField(verbose_name='Среда - конец', null=True, blank=True)
+    thursday_start = models.TimeField(verbose_name='Четверг - начало', null=True, blank=True)
+    thursday_end = models.TimeField(verbose_name='Четверг - конец', null=True, blank=True)
+    friday_start = models.TimeField(verbose_name='Пятница - начало', null=True, blank=True)
+    friday_end = models.TimeField(verbose_name='Пятница - конец', null=True, blank=True)
+    saturday_start = models.TimeField(verbose_name='Суббота - начало', null=True, blank=True)
+    saturday_end = models.TimeField(verbose_name='Суббота - конец', null=True, blank=True)
+
     corps_index = models.CharField(max_length=7)
     corps_number = models.PositiveIntegerField()
 
     class Meta:
-        verbose_name_plural = 'Рабочее время'
-        verbose_name = 'Рабочее время'
+        verbose_name_plural = 'Рабочее время преподавателя'
+        verbose_name = 'Рабочее время преподавателей'
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        # pass
+        return f'Рабочее время ' + self.teacher.surname + ' ' + str(self.teacher.name)[:-len(self.teacher.name)+1] + '.' + str(self.teacher.patronymic)[:-len(self.teacher.patronymic)+1] + '.'
 
 # Факультет
 class Faculty(models.Model):
@@ -77,7 +100,7 @@ class  Direction (models.Model):
 # Группа
 class Group(models.Model): 
     name = models.CharField(max_length=31, verbose_name='Группа')
-    amount = models.PositiveIntegerField(max_length=3, verbose_name='Количество')
+    amount = models.PositiveIntegerField(verbose_name='Количество')
     direction = models.ForeignKey('Direction', null=True, on_delete=models.SET_NULL, verbose_name='Направление')
 
     class Meta:
@@ -90,8 +113,8 @@ class Group(models.Model):
 
 # Подгруппа
 class Subgroup(models.Model):
-    number = models.PositiveIntegerField(max_length=1, verbose_name='Номер подгруппы')
-    amount = models.PositiveIntegerField(max_length=3, verbose_name='Количество')
+    number = models.PositiveIntegerField(verbose_name='Номер подгруппы')
+    amount = models.PositiveIntegerField(verbose_name='Количество')
     group_parent = models.OneToOneField('Group', null=True, on_delete=models.SET_NULL, verbose_name='Родительская группа')
 
     class Meta:
@@ -120,16 +143,16 @@ class Class_schedule(models.Model):
     teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL, verbose_name='Преподаватель')
     room = models.OneToOneField('Room', null=True, on_delete=models.SET_NULL, verbose_name='Аудитория')
     discipline_name = models.CharField(max_length=63, verbose_name='Дисциплина')
-    week_day = models.DateField(verbose_name='День недели') # ! доработать
-    periodicity = models.CharField(max_length=3, verbose_name='Частота')
-    start_time = models.DateTimeField(verbose_name='Начало') # ! убрать дату, оставить время
-    end_time = models.DateTimeField(verbose_name='Конец') # ! аналогично
+    week_day = models.CharField(max_length=31, verbose_name='День недели') # * бэк должен позволить выбрать список вариантов 
+    periodicity = models.CharField(max_length=7, verbose_name='Частота')
+    start_time = models.TimeField(verbose_name='Начало')
+    end_time = models.TimeField(verbose_name='Конец')
 
     class Meta:
         verbose_name_plural = 'Расписание занятий'
         verbose_name = 'Расписание занятия'
         ordering = ['room']
-    def __str__(self):
+    def __str__(self): # * I'm fine
         return self.discipline_name + '. ауд.:' + str(self.room.number) + f' {self.room.corps_index}/{self.room.corps_number}'
 
 # Аудитория
