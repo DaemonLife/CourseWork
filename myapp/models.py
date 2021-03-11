@@ -13,7 +13,6 @@ class Teacher(models.Model):
         verbose_name_plural = 'Преподаватели'
         verbose_name = 'Преподаватель'
         ordering = ['name']
-
     def __str__(self):
         return self.surname + ' ' + str(self.name)[:-len(self.name)+1] + '.' + str(self.patronymic)[:-len(self.patronymic)+1] + '.'
 
@@ -26,24 +25,11 @@ class Chair(models.Model):
         verbose_name_plural = 'Кафедры'
         verbose_name = 'Кафедра'
         ordering = ['name']
-
     def __str__(self):
         return self.name
 
-# # Преподватель + Рабочее время
-# class Work_time_Teacher(models.Model): # ! доработать
-#     teacher = models.ForeignKey('Teacher', on_delete=models.SET_NULL)
-#     work_time = models.ForeignKey('Work_time', on_delete=models.SET_NULL)
-
-#     class Meta:
-#         verbose_name_plural = 'Рабочее время преподавателя'
-#         verbose_name_plural = 'Рабочее время преподавателей'
-
-#     def __str__(self):
-#         return f'Рабочее время преподавателя {self.teacher.surname}'
-
 # Рабочее время
-class Work_time(models.Model): # ! доработать
+class Work_time(models.Model):
     teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL)
 
     monday_start = models.TimeField(verbose_name='Понедельник - начало', null=True, blank=True)
@@ -65,9 +51,7 @@ class Work_time(models.Model): # ! доработать
     class Meta:
         verbose_name_plural = 'Рабочее время преподавателя'
         verbose_name = 'Рабочее время преподавателей'
-
-    def __str__(self):
-        # pass
+    def __str__(self): # * Hmmm... I'm fine
         return f'Рабочее время ' + self.teacher.surname + ' ' + str(self.teacher.name)[:-len(self.teacher.name)+1] + '.' + str(self.teacher.patronymic)[:-len(self.teacher.patronymic)+1] + '.'
 
 # Факультет
@@ -78,7 +62,6 @@ class Faculty(models.Model):
         verbose_name_plural = 'Факультеты'
         verbose_name = 'Факультет'
         ordering = ['name']
-
     def __str__(self):
         return self.name
 
@@ -93,7 +76,6 @@ class  Direction (models.Model):
         verbose_name_plural = 'Направления'
         verbose_name = 'Направление'
         ordering = ['name']
-
     def __str__(self):
         return self.name
 
@@ -107,7 +89,6 @@ class Group(models.Model):
         verbose_name_plural = 'Группы'
         verbose_name = 'Группа'
         ordering = ['name']
-
     def __str__(self):
         return self.name
 
@@ -137,23 +118,6 @@ class Exam_schedule(models.Model):
     def __str__(self):
         return f'{self.name} {self.groups.name}'
 
-# Расписание занятия
-class Class_schedule(models.Model):
-    groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL, verbose_name='Группы')
-    teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL, verbose_name='Преподаватель')
-    room = models.OneToOneField('Room', null=True, on_delete=models.SET_NULL, verbose_name='Аудитория')
-    discipline_name = models.CharField(max_length=63, verbose_name='Дисциплина')
-    week_day = models.CharField(max_length=31, verbose_name='День недели') # * бэк должен позволить выбрать список вариантов 
-    periodicity = models.CharField(max_length=7, verbose_name='Частота')
-    start_time = models.TimeField(verbose_name='Начало')
-    end_time = models.TimeField(verbose_name='Конец')
-
-    class Meta:
-        verbose_name_plural = 'Расписание занятий'
-        verbose_name = 'Расписание занятия'
-        ordering = ['room']
-    def __str__(self): # * I'm fine
-        return self.discipline_name + '. ауд.:' + str(self.room.number) + f' {self.room.corps_index}/{self.room.corps_number}'
 
 # Аудитория
 class Room(models.Model):
@@ -169,3 +133,21 @@ class Room(models.Model):
         ordering = ['number']
     def __str__(self):
         return str(self.number)
+
+# Расписание занятия
+class Class_schedule(models.Model):
+    groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL, verbose_name='Группы')
+    teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL, verbose_name='Преподаватель')
+    room = models.OneToOneField('Room', null=True, on_delete=models.SET_NULL, verbose_name='Аудитория')
+    discipline_name = models.CharField(max_length=63, verbose_name='Дисциплина')
+    week_day = models.CharField(max_length=31, verbose_name='День недели') # * бэк должен позволить выбрать список вариантов 
+    periodicity = models.CharField(max_length=7, verbose_name='Частота')
+    start_time = models.TimeField(verbose_name='Начало')
+    end_time = models.TimeField(verbose_name='Конец')
+
+    class Meta:
+        verbose_name_plural = 'Расписание занятий'
+        verbose_name = 'Расписание занятия'
+        ordering = ['room']
+    def __str__(self): # * Hmmm... I'm fine
+        return self.discipline_name + '. ауд.:' + str(self.room.number) + f' {self.room.corps_index}/{self.room.corps_number}'
