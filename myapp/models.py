@@ -32,7 +32,7 @@ class Chair(models.Model):
 # Рабочее время
 class Work_time(models.Model):
     teacher = models.ForeignKey('Teacher', null=True, on_delete=models.SET_NULL)
-
+    # ! idk!
     monday_start = models.TimeField(verbose_name='Понедельник - начало', null=True, blank=True)
     monday_end = models.TimeField(verbose_name='Понедельник - конец', null=True, blank=True)
     tuesday_start = models.TimeField(verbose_name='Вторник - начало', null=True, blank=True)
