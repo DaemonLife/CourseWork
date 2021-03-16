@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'diploma.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'MyDB',
+        'NAME': 'Schedule',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',

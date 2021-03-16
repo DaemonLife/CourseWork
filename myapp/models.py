@@ -7,7 +7,8 @@ class Teacher(models.Model):
     patronymic = models.CharField(max_length=31, verbose_name='Отчество')
     position = models.CharField(max_length=31, verbose_name='Должность')
     chair = models.ForeignKey('Chair', null=True, on_delete=models.SET_NULL, verbose_name='Кафедра')
-    # work_time = models.ForeignKey('Work_time', null=True, on_delete = models.SET_NULL, verbose_name='Рабочее время')
+    rate = models.FloatField(null=True, default=None, verbose_name='Ставка')
+    hours = models.PositiveIntegerField(default=None, null=True, verbose_name='Количество рабочих часов')
 
     class Meta:
         verbose_name_plural = 'Преподаватели'
