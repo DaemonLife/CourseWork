@@ -117,7 +117,7 @@ class Exam_schedule(models.Model):
         verbose_name = 'Расписание экзамена'
         ordering = ['name']
     def __str__(self):
-        return f'{self.name} {self.group.name}'
+        return f'{self.name} - {self.group.name}'
 
 
 # Аудитория
