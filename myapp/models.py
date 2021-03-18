@@ -124,7 +124,7 @@ class Exam_schedule(models.Model):
 class Room(models.Model):
     number = models.PositiveIntegerField(verbose_name='Номер')
     type_room = models.CharField(max_length=31, verbose_name='Тип аудитории')
-    capacity = models.PositiveIntegerField(verbose_name='Емкость')
+    capacity = models.PositiveIntegerField(verbose_name='Ёмкость')
     corps_index = models.CharField(max_length=7, verbose_name='Индекс корпуса')
     corps_number = models.PositiveIntegerField(verbose_name='Номер корпуса')
 
