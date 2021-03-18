@@ -110,14 +110,14 @@ class Subgroup(models.Model):
 class Exam_schedule(models.Model):
     name = models.CharField(max_length=63, verbose_name='Название')
     date = models.DateField(verbose_name='Дата экзамена')
-    groups = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey('Group', null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = 'Расписание экзаменов'
         verbose_name = 'Расписание экзамена'
         ordering = ['name']
     def __str__(self):
-        return f'{self.name} {self.groups.name}'
+        return f'{self.name} {self.group.name}'
 
 
 # Аудитория
